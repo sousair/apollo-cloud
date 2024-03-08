@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  apollo-http-api:
+    image: apollo-cloud-http
+    container_name: apollo-http-api
+    build:
+      context: ../
+      dockerfile: ./build/Dockerfile
+    ports:
+      - 8080:80
+    depends_on:
+      - postgres
+  
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: apollo-cloud
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
