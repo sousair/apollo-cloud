@@ -34,6 +34,18 @@ func entityToMusicModel(entity *entities.Music) *gormmodels.MusicModel {
 		return nil
 	}
 
+	var albumModel gormmodels.AlbumModel
+
+	if entity.Album != nil {
+		albumModel = *entityToAlbumModel(entity.Album)
+	}
+
+	var ownerModel gormmodels.OwnerModel
+
+	if entity.Owner != nil {
+		ownerModel = *entityToOwnerModel(entity.Owner)
+	}
+
 	return &gormmodels.MusicModel{
 		ID:               entity.ID,
 		Name:             entity.Name,
@@ -43,7 +55,7 @@ func entityToMusicModel(entity *entities.Music) *gormmodels.MusicModel {
 		OwnerID:          entity.OwnerID,
 		CoverImageURL:    entity.CoverImageURL,
 		SongDataLocation: entity.SongDataLocation,
-		Album:            *entityToAlbumModel(entity.Album),
-		Owner:            *entityToOwnerModel(entity.Owner),
+		Album:            albumModel,
+		Owner:            ownerModel,
 	}
 }

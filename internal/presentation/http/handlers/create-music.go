@@ -63,8 +63,7 @@ func (h CreateMusicHttpHandler) Handle(c echo.Context) error {
 		return httputils.NewHttpErrorResponse(c, http.StatusInternalServerError, "internal server error")
 	}
 
-	// TODO: check if need to close here
-	// defer coverImage.Close()
+	defer coverImage.Close()
 
 	songMultipartHeader, err := c.FormFile("audio_file")
 
@@ -78,7 +77,7 @@ func (h CreateMusicHttpHandler) Handle(c echo.Context) error {
 		return httputils.NewHttpErrorResponse(c, http.StatusInternalServerError, "internal server error")
 	}
 
-	// defer song.Close()
+	defer song.Close()
 
 	durationInMs, err := strconv.Atoi(req.DurationInMs)
 	releaseDate, err := time.Parse("2006-01-02", req.ReleaseDate)

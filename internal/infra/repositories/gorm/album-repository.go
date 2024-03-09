@@ -39,13 +39,19 @@ func entityToAlbumModel(entity *entities.Album) *gormmodels.AlbumModel {
 		musics = append(musics, *entityToMusicModel(music))
 	}
 
+	var ownerModel gormmodels.OwnerModel
+
+	if entity.Owner != nil {
+		ownerModel = *entityToOwnerModel(entity.Owner)
+	}
+
 	return &gormmodels.AlbumModel{
 		ID:            entity.ID,
 		Name:          entity.Name,
 		ReleaseDate:   entity.ReleaseDate,
 		OwnerID:       entity.OwnerID,
 		CoverImageURL: entity.CoverImageURL,
-		Owner:         *entityToOwnerModel(entity.Owner),
+		Owner:         ownerModel,
 		Musics:        musics,
 	}
 }

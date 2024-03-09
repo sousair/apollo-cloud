@@ -1,6 +1,7 @@
 package httputils
 
 import (
+	"io"
 	"mime/multipart"
 	"os"
 )
@@ -12,11 +13,16 @@ func MultipartHeaderFileToOsFile(headerFile *multipart.FileHeader) (*os.File, er
 	}
 	defer file.Close()
 
-	osFile, ok := file.(*os.File)
+	newFile, err := os.Create(headerFile.Filename)
 
-	if !ok {
+	if err != nil {
+		return nil, err
+	}
+	_, err = io.Copy(newFile, file)
+
+	if err != nil {
 		return nil, err
 	}
 
-	return osFile, nil
+	return newFile, nil
 }

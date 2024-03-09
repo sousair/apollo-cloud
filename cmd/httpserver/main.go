@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator"
 	"github.com/joho/godotenv"
@@ -43,8 +44,18 @@ func main() {
 		panic(err)
 	}
 
+	var (
+		awsAccessKeyID     = os.Getenv("AWS_ACCESS_KEY_ID")
+		awsSecretAccessKey = os.Getenv("AWS_SECRET_ACCESS_KEY")
+		awsRegion          = os.Getenv("AWS_REGION")
+		awsEndpoint        = os.Getenv("AWS_ENDPOINT")
+	)
+
 	awsSession, err := session.NewSession(&aws.Config{
-		Region: aws.String(os.Getenv("AWS_REGION")),
+		Region:           aws.String(awsRegion),
+		Credentials:      credentials.NewStaticCredentials(awsAccessKeyID, awsSecretAccessKey, ""),
+		S3ForcePathStyle: aws.Bool(true),
+		Endpoint:         aws.String(awsEndpoint),
 	})
 
 	if err != nil {
