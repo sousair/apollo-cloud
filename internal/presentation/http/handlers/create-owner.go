@@ -27,10 +27,10 @@ type (
 
 var _ httputils.EchoHttpHandler = (*CreateOwnerHttpHandler)(nil)
 
-func NewCreateOwnerHttpHandler(createOwnerUsecase usecases.CreateOwnerUsecase, validator *validator.Validate) *CreateOwnerHttpHandler {
+func NewCreateOwnerHttpHandler(validator *validator.Validate, createOwnerUsecase usecases.CreateOwnerUsecase) *CreateOwnerHttpHandler {
 	return &CreateOwnerHttpHandler{
-		createOwnerUsecase: createOwnerUsecase,
 		validator:          validator,
+		createOwnerUsecase: createOwnerUsecase,
 	}
 }
 

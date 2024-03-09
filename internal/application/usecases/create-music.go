@@ -15,6 +15,18 @@ type CreateMusicUsecase struct {
 
 var _ usecases.CreateMusicUsecase = (*CreateMusicUsecase)(nil)
 
+func NewCreateMusicUsecase(
+	uuidProvider providers.UuidProvider,
+	fileRepository repositories.FileRepository,
+	musicRepository repositories.MusicRepository,
+) *CreateMusicUsecase {
+	return &CreateMusicUsecase{
+		uuidProvider,
+		fileRepository,
+		musicRepository,
+	}
+}
+
 func (uc CreateMusicUsecase) Create(params usecases.CreateMusicParams) (*entities.Music, error) {
 	coverImageLocation, err := uc.fileRepository.Upload(repositories.UploadFileParams{
 		File:   params.CoverImage,
