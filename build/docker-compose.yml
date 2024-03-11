@@ -6,11 +6,13 @@ services:
     container_name: apollo-http-api
     build:
       context: ../
-      dockerfile: ./build/Dockerfile
+      dockerfile: ./build/Dockerfile.dev
     ports:
       - 8080:80
     depends_on:
       - postgres
+    volumes:
+      - ../:/app
   
   postgres:
     image: postgres:latest
@@ -22,7 +24,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
         
   localstack:
     image: localstack/localstack
@@ -32,10 +34,13 @@ services:
     environment:
       - AWS_DEFAULT_REGION=us-east-1
       - SERVICES=s3
+      - PERSISTENCE=1
+      - SNAPSHOT_SAVE_STRATEGY=ON_REQUEST
+      - SNAPSHOT_LOAD_STRATEGY=ON_STARTUP
     volumes:
-      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
-      - /var/run/docker.sock:/var/run/docker.sock 
+      - localstack_data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
-  postgres-data:
-  localstack-data:
+  postgres_data:
+  localstack_data:
