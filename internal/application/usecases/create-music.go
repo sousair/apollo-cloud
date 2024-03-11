@@ -27,15 +27,7 @@ func NewCreateMusicUsecase(
 	}
 }
 
-func (uc CreateMusicUsecase) Create(params usecases.CreateMusicParams) (*entities.Music, error) {
-	coverImageLocation, err := uc.fileRepository.Upload(repositories.UploadFileParams{
-		File:   params.CoverImage,
-		Public: true,
-	})
-
-	if err != nil {
-		return nil, err
-	}
+func (uc CreateMusicUsecase) Create(params usecases.CreateMusicParams) (music *entities.Music, err error) {
 
 	songLocation, err := uc.fileRepository.Upload(repositories.UploadFileParams{
 		File:   params.Song,
@@ -46,18 +38,37 @@ func (uc CreateMusicUsecase) Create(params usecases.CreateMusicParams) (*entitie
 		return nil, err
 	}
 
-	music, err := entities.NewMusic(entities.NewMusicParams{
+	music, err = entities.NewMusic(entities.NewMusicParams{
 		ID:               uc.uuidProvider.Generate(),
 		Name:             params.Name,
 		OwnerID:          params.OwnerID,
 		DurationInMs:     params.DurationInMs,
 		ReleaseDate:      params.ReleaseDate,
-		CoverImageURL:    coverImageLocation.URL,
 		SongDataLocation: songLocation.URL,
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
 	if params.AlbumID != "" {
 		music.AlbumID = params.AlbumID
+	}
+
+	var coverImageLocation *repositories.Location
+	if params.CoverImage != nil {
+		coverImageLocation, err = uc.fileRepository.Upload(repositories.UploadFileParams{
+			File:   params.CoverImage,
+			Public: true,
+		})
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if coverImageLocation != nil {
+		music.CoverImageURL = coverImageLocation.URL
 	}
 
 	if err = uc.musicRepository.Insert(music); err != nil {

@@ -41,7 +41,6 @@ func NewMusic(props NewMusicParams) (*Music, error) {
 		props.DurationInMs == 0 ||
 		props.ReleaseDate.IsZero() ||
 		props.OwnerID == "" ||
-		props.CoverImageURL == "" ||
 		props.SongDataLocation == "" {
 		return nil, errors.New("invalid music")
 	}
