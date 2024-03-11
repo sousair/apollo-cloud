@@ -72,18 +72,22 @@ func main() {
 	ownerRepository := gormrepositories.NewGormOwnerRepository(db)
 	fileRepository := s3.NewS3FileRepository(awsSession, privateBucketName, publicBucketName)
 	musicRepository := gormrepositories.NewGormMusicRepository(db)
+	albumRepository := gormrepositories.NewGormAlbumRepository(db)
 
 	createOwnerUsecase := appusecases.NewCreateOwnerUseCase(uuidProvider, ownerRepository)
 	createMusicUsecase := appusecases.NewCreateMusicUsecase(uuidProvider, fileRepository, musicRepository)
+	releaseAlbumUseCase := appusecases.NewReleaseAlbumUseCase(fileRepository, uuidProvider, albumRepository, createMusicUsecase)
 
 	validator := validator.New()
 	createOwnerHandler := httphandlers.NewCreateOwnerHttpHandler(validator, createOwnerUsecase)
 	createMusicHandler := httphandlers.NewCreateMusicHttpHandler(validator, createMusicUsecase)
+	releaseAlbumHandler := httphandlers.NewReleaseAlbumHttpHandler(validator, releaseAlbumUseCase)
 
 	e := echo.New()
 
 	e.POST("/owners", createOwnerHandler.Handle)
 	e.POST("/musics", createMusicHandler.Handle)
+	e.POST("/albums", releaseAlbumHandler.Handle)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", os.Getenv("HTTP_PORT"))))
 }

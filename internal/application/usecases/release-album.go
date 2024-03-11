@@ -1,6 +1,7 @@
 package appusecases
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/sousair/apollo-cloud/internal/domain/entities"
@@ -56,16 +57,23 @@ func (uc ReleaseAlbumUsecase) Release(params usecases.ReleaseAlbumParams) (*enti
 		return nil, err
 	}
 
+	err = uc.albumRepository.Insert(album)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var musics []*entities.Music
 	for _, musicParams := range params.Musics {
+		fmt.Println("CoverImageFile", musicParams.CoverImageFile)
 		music, err := uc.createMusicUsecase.Create(usecases.CreateMusicParams{
 			Name:         musicParams.Name,
-			OwnerID:      musicParams.OwnerID,
+			OwnerID:      params.OwnerID,
 			AlbumID:      album.ID,
 			DurationInMs: musicParams.DurationInMs,
 			ReleaseDate:  releaseTime,
-			CoverImage:   musicParams.CoverImage,
-			Song:         musicParams.Song,
+			CoverImage:   musicParams.CoverImageFile,
+			Song:         musicParams.SongFile,
 		})
 
 		if err != nil {
@@ -77,12 +85,6 @@ func (uc ReleaseAlbumUsecase) Release(params usecases.ReleaseAlbumParams) (*enti
 	}
 
 	album.Musics = musics
-
-	err = uc.albumRepository.Insert(album)
-
-	if err != nil {
-		return nil, err
-	}
 
 	return album, nil
 }

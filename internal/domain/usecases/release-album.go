@@ -15,6 +15,13 @@ type (
 		Name           string
 		OwnerID        string
 		CoverImageFile *os.File
-		Musics         []CreateMusicParams
+		Musics         []ReleaseAlbumMusicParams
+	}
+
+	ReleaseAlbumMusicParams struct {
+		Name           string
+		DurationInMs   int
+		CoverImageFile *os.File
+		SongFile       *os.File
 	}
 )
