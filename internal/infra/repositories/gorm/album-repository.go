@@ -45,6 +45,27 @@ func (r GormAlbumRepository) FindBy(where *entities.Album, includes []string) (*
 	return modelToAlbumEntity(&model), nil
 }
 
+func (r GormAlbumRepository) FindAllBy(where *entities.Album, includes []string) ([]*entities.Album, error) {
+	var models []*gormmodels.AlbumModel
+
+	query := r.db
+
+	for _, relation := range includes {
+		query = query.Preload(relation)
+	}
+
+	if err := query.Where(where).Find(&models).Error; err != nil {
+		return nil, err
+	}
+
+	var entities []*entities.Album
+	for _, model := range models {
+		entities = append(entities, modelToAlbumEntity(model))
+	}
+
+	return entities, nil
+}
+
 func entityToAlbumModel(entity *entities.Album) *gormmodels.AlbumModel {
 	if entity == nil {
 		return nil

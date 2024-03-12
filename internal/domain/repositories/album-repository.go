@@ -6,5 +6,6 @@ type (
 	AlbumRepository interface {
 		Insert(*entities.Album) error
 		FindBy(where *entities.Album, includes []string) (*entities.Album, error)
+		FindAllBy(where *entities.Album, includes []string) ([]*entities.Album, error)
 	}
 )
