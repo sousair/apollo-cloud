@@ -29,6 +29,22 @@ func (r GormMusicRepository) Insert(entity *entities.Music) error {
 	return nil
 }
 
+func (r GormMusicRepository) FindBy(where *entities.Music, includes []string) (*entities.Music, error) {
+	var model gormmodels.MusicModel
+
+	query := r.db
+
+	for _, relation := range includes {
+		query = query.Preload(relation)
+	}
+
+	if err := query.Where(where).First(&model).Error; err != nil {
+		return nil, err
+	}
+
+	return modelToMusicEntity(&model), nil
+}
+
 func entityToMusicModel(entity *entities.Music) *gormmodels.MusicModel {
 	if entity == nil {
 		return nil

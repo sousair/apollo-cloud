@@ -20,7 +20,7 @@ func NewGetAlbumUsecase(albumRepository repositories.AlbumRepository) *GetAlbumU
 	}
 }
 
-func (u GetAlbumUsecase) Get(params usecases.GetAlbumParams) (*entities.Album, error) {
+func (uc GetAlbumUsecase) Get(params usecases.GetAlbumParams) (*entities.Album, error) {
 	includes := []string{}
 
 	if params.IncludeMusicsData {
@@ -31,7 +31,7 @@ func (u GetAlbumUsecase) Get(params usecases.GetAlbumParams) (*entities.Album, e
 		includes = append(includes, "Owner")
 	}
 
-	album, err := u.albumRepository.FindBy(&entities.Album{ID: params.ID}, includes)
+	album, err := uc.albumRepository.FindBy(&entities.Album{ID: params.ID}, includes)
 
 	if err != nil {
 		return nil, err

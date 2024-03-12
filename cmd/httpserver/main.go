@@ -78,18 +78,22 @@ func main() {
 	createMusicUsecase := appusecases.NewCreateMusicUsecase(uuidProvider, fileRepository, musicRepository)
 	releaseAlbumUsecase := appusecases.NewReleaseAlbumUsecase(fileRepository, uuidProvider, albumRepository, createMusicUsecase)
 	getAlbumUsecase := appusecases.NewGetAlbumUsecase(albumRepository)
+	getMusicUsecase := appusecases.NewGetMusicUsecase(musicRepository)
 
 	validator := validator.New()
+
 	createOwnerHandler := httphandlers.NewCreateOwnerHttpHandler(validator, createOwnerUsecase)
 	createMusicHandler := httphandlers.NewCreateMusicHttpHandler(validator, createMusicUsecase)
 	releaseAlbumHandler := httphandlers.NewReleaseAlbumHttpHandler(validator, releaseAlbumUsecase)
 	getAlbumHandler := httphandlers.NewGetAlbumHttpHandler(validator, getAlbumUsecase)
+	getMusicHandler := httphandlers.NewGetMusicHttpHandler(validator, getMusicUsecase)
 
 	e := echo.New()
 
 	e.POST("/owners", createOwnerHandler.Handle)
 
 	e.POST("/musics", createMusicHandler.Handle)
+	e.GET("/musics/:id", getMusicHandler.Handle)
 
 	e.POST("/albums", releaseAlbumHandler.Handle)
 	e.GET("/albums/:id", getAlbumHandler.Handle)

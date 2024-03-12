@@ -1,7 +1,6 @@
 package httphandlers
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -56,6 +55,8 @@ func (h ReleaseAlbumHttpHandler) Handle(c echo.Context) error {
 	}
 
 	coverImageFile, err := httputils.MultipartHeaderFileToOsFile(coverImage)
+
+	defer coverImageFile.Close()
 
 	if err != nil {
 		return httputils.NewHttpErrorResponse(c, http.StatusInternalServerError, "internal server error")

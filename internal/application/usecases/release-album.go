@@ -1,7 +1,6 @@
 package appusecases
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/sousair/apollo-cloud/internal/domain/entities"
