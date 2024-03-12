@@ -83,7 +83,6 @@ func (h ReleaseAlbumHttpHandler) Handle(c echo.Context) error {
 	}
 
 	if err != nil {
-		fmt.Println(err)
 		return httputils.NewHttpErrorResponse(c, http.StatusInternalServerError, "internal server error")
 	}
 

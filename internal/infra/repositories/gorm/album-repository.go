@@ -29,20 +29,30 @@ func (r GormAlbumRepository) Insert(entity *entities.Album) error {
 	return nil
 }
 
+func (r GormAlbumRepository) FindBy(where *entities.Album, includes []string) (*entities.Album, error) {
+	var model gormmodels.AlbumModel
+
+	query := r.db
+
+	for _, relation := range includes {
+		query = query.Preload(relation)
+	}
+
+	if err := query.Where(where).First(&model).Error; err != nil {
+		return nil, err
+	}
+
+	return modelToAlbumEntity(&model), nil
+}
+
 func entityToAlbumModel(entity *entities.Album) *gormmodels.AlbumModel {
 	if entity == nil {
 		return nil
 	}
 
-	var musics []gormmodels.MusicModel
+	var musics []*gormmodels.MusicModel
 	for _, music := range entity.Musics {
-		musics = append(musics, *entityToMusicModel(music))
-	}
-
-	var ownerModel gormmodels.OwnerModel
-
-	if entity.Owner != nil {
-		ownerModel = *entityToOwnerModel(entity.Owner)
+		musics = append(musics, entityToMusicModel(music))
 	}
 
 	return &gormmodels.AlbumModel{
@@ -51,7 +61,28 @@ func entityToAlbumModel(entity *entities.Album) *gormmodels.AlbumModel {
 		ReleaseDate:   entity.ReleaseDate,
 		OwnerID:       entity.OwnerID,
 		CoverImageURL: entity.CoverImageURL,
-		Owner:         ownerModel,
+		Owner:         entityToOwnerModel(entity.Owner),
+		Musics:        musics,
+	}
+}
+
+func modelToAlbumEntity(model *gormmodels.AlbumModel) *entities.Album {
+	if model == nil {
+		return nil
+	}
+
+	var musics []*entities.Music
+	for _, music := range model.Musics {
+		musics = append(musics, modelToMusicEntity(music))
+	}
+
+	return &entities.Album{
+		ID:            model.ID,
+		Name:          model.Name,
+		ReleaseDate:   model.ReleaseDate,
+		OwnerID:       model.OwnerID,
+		CoverImageURL: model.CoverImageURL,
+		Owner:         modelToOwnerEntity(model.Owner),
 		Musics:        musics,
 	}
 }

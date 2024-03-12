@@ -17,6 +17,6 @@ type MusicModel struct {
 	CoverImageURL    string    `gorm:"default:null"`
 	SongDataLocation string    `gorm:"default:null"`
 
-	Album AlbumModel `gorm:"foreignKey:AlbumID"`
-	Owner OwnerModel `gorm:"foreignKey:OwnerID"`
+	Album *AlbumModel `gorm:"foreignKey:AlbumID"`
+	Owner *OwnerModel `gorm:"foreignKey:OwnerID"`
 }

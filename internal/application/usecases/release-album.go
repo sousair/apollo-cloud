@@ -19,7 +19,7 @@ type ReleaseAlbumUsecase struct {
 
 var _ usecases.ReleaseAlbumUsecase = (*ReleaseAlbumUsecase)(nil)
 
-func NewReleaseAlbumUseCase(
+func NewReleaseAlbumUsecase(
 	fileRepository repositories.FileRepository,
 	uuidProvider providers.UuidProvider,
 	albumRepository repositories.AlbumRepository,
@@ -65,7 +65,6 @@ func (uc ReleaseAlbumUsecase) Release(params usecases.ReleaseAlbumParams) (*enti
 
 	var musics []*entities.Music
 	for _, musicParams := range params.Musics {
-		fmt.Println("CoverImageFile", musicParams.CoverImageFile)
 		music, err := uc.createMusicUsecase.Create(usecases.CreateMusicParams{
 			Name:         musicParams.Name,
 			OwnerID:      params.OwnerID,

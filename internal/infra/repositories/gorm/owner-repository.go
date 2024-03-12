@@ -34,19 +34,42 @@ func entityToOwnerModel(entity *entities.Owner) *gormmodels.OwnerModel {
 		return nil
 	}
 
-	var albums []gormmodels.AlbumModel
+	var albums []*gormmodels.AlbumModel
 	for _, album := range entity.Albums {
-		albums = append(albums, *entityToAlbumModel(album))
+		albums = append(albums, entityToAlbumModel(album))
 	}
 
-	var musics []gormmodels.MusicModel
+	var musics []*gormmodels.MusicModel
 	for _, music := range entity.Musics {
-		musics = append(musics, *entityToMusicModel(music))
+		musics = append(musics, entityToMusicModel(music))
 	}
 
 	return &gormmodels.OwnerModel{
 		ID:     entity.ID,
 		Name:   entity.Name,
+		Albums: albums,
+		Musics: musics,
+	}
+}
+
+func modelToOwnerEntity(model *gormmodels.OwnerModel) *entities.Owner {
+	if model == nil {
+		return nil
+	}
+
+	var albums []*entities.Album
+	for _, album := range model.Albums {
+		albums = append(albums, modelToAlbumEntity(album))
+	}
+
+	var musics []*entities.Music
+	for _, music := range model.Musics {
+		musics = append(musics, modelToMusicEntity(music))
+	}
+
+	return &entities.Owner{
+		ID:     model.ID,
+		Name:   model.Name,
 		Albums: albums,
 		Musics: musics,
 	}

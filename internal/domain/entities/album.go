@@ -13,8 +13,8 @@ type (
 		OwnerID       string    `json:"owner_id"`
 		CoverImageURL string    `json:"cover_image_url"`
 
-		Owner  *Owner   `json:"owner"`
-		Musics []*Music `json:"musics"`
+		Owner  *Owner   `json:"owner,omitempty"`
+		Musics []*Music `json:"musics,omitempty"`
 	}
 
 	NewAlbumParams struct {

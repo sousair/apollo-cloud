@@ -74,20 +74,25 @@ func main() {
 	musicRepository := gormrepositories.NewGormMusicRepository(db)
 	albumRepository := gormrepositories.NewGormAlbumRepository(db)
 
-	createOwnerUsecase := appusecases.NewCreateOwnerUseCase(uuidProvider, ownerRepository)
+	createOwnerUsecase := appusecases.NewCreateOwnerUsecase(uuidProvider, ownerRepository)
 	createMusicUsecase := appusecases.NewCreateMusicUsecase(uuidProvider, fileRepository, musicRepository)
-	releaseAlbumUseCase := appusecases.NewReleaseAlbumUseCase(fileRepository, uuidProvider, albumRepository, createMusicUsecase)
+	releaseAlbumUsecase := appusecases.NewReleaseAlbumUsecase(fileRepository, uuidProvider, albumRepository, createMusicUsecase)
+	getAlbumUsecase := appusecases.NewGetAlbumUsecase(albumRepository)
 
 	validator := validator.New()
 	createOwnerHandler := httphandlers.NewCreateOwnerHttpHandler(validator, createOwnerUsecase)
 	createMusicHandler := httphandlers.NewCreateMusicHttpHandler(validator, createMusicUsecase)
-	releaseAlbumHandler := httphandlers.NewReleaseAlbumHttpHandler(validator, releaseAlbumUseCase)
+	releaseAlbumHandler := httphandlers.NewReleaseAlbumHttpHandler(validator, releaseAlbumUsecase)
+	getAlbumHandler := httphandlers.NewGetAlbumHttpHandler(validator, getAlbumUsecase)
 
 	e := echo.New()
 
 	e.POST("/owners", createOwnerHandler.Handle)
+
 	e.POST("/musics", createMusicHandler.Handle)
+
 	e.POST("/albums", releaseAlbumHandler.Handle)
+	e.GET("/albums/:id", getAlbumHandler.Handle)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", os.Getenv("HTTP_PORT"))))
 }

@@ -11,13 +11,13 @@ type (
 		Name             string    `json:"name"`
 		DurationInMs     int       `json:"duration_in_ms"`
 		ReleaseDate      time.Time `json:"release_date"`
-		AlbumID          string    `json:"album_id"`
+		AlbumID          string    `json:"album_id,omitempty"`
 		OwnerID          string    `json:"owner_id"`
-		CoverImageURL    string    `json:"cover_image_url"`
-		SongDataLocation string    `json:"song_data_location"`
+		CoverImageURL    string    `json:"cover_image_url,omitempty"`
+		SongDataLocation string    `json:"-"`
 
-		Album *Album `json:"album"`
-		Owner *Owner `json:"owner"`
+		Album *Album `json:"album,omitempty"`
+		Owner *Owner `json:"owner,omitempty"`
 	}
 
 	NewMusicParams struct {

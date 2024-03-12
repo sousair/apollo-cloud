@@ -14,6 +14,6 @@ type AlbumModel struct {
 	OwnerID       string    `gorm:"type:uuid;not null"`
 	CoverImageURL string    `gorm:"not null"`
 
-	Owner  OwnerModel   `gorm:"foreignKey:OwnerID"`
-	Musics []MusicModel `gorm:"references:ID;foreignKey:AlbumID"`
+	Owner  *OwnerModel   `gorm:"foreignKey:OwnerID"`
+	Musics []*MusicModel `gorm:"references:ID;foreignKey:AlbumID"`
 }

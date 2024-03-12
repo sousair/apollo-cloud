@@ -7,8 +7,8 @@ type (
 		ID   string `json:"id"`
 		Name string `json:"name"`
 
-		Albums []*Album `json:"albums"`
-		Musics []*Music `json:"musics"`
+		Albums []*Album `json:"albums,omitempty"`
+		Musics []*Music `json:"musics,omitempty"`
 	}
 
 	NewOwnerParams struct {

@@ -14,7 +14,7 @@ type CreateOwnerUsecase struct {
 
 var _ usecases.CreateOwnerUsecase = (*CreateOwnerUsecase)(nil)
 
-func NewCreateOwnerUseCase(
+func NewCreateOwnerUsecase(
 	uuidProvider providers.UuidProvider,
 	ownerRepository repositories.OwnerRepository,
 ) *CreateOwnerUsecase {
