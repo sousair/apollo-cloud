@@ -25,11 +25,16 @@ func (uc GetOwnerAlbumsUsecase) GetAlbums(params usecases.GetOwnerAlbumsParams) 
 		includes = append(includes, "Musics")
 	}
 
-	album, err := uc.albumRepository.FindAllBy(&entities.Album{OwnerID: params.OwnerID}, includes)
+	albums, err := uc.albumRepository.FindAllBy(
+		map[string]interface{}{
+			"owner_id": params.OwnerID,
+		},
+		includes,
+	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return album, nil
+	return albums, nil
 }

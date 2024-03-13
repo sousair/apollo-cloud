@@ -1,15 +1,14 @@
 package repositories
 
-import "os"
+import (
+	"os"
+
+	"github.com/sousair/apollo-cloud/internal/domain/valueobjects"
+)
 
 type (
 	FileRepository interface {
-		Upload(params UploadFileParams) (*Location, error)
-	}
-
-	Location struct {
-		URL      string
-		Provider string
+		Upload(params UploadFileParams) (*valueobjects.FileLocation, error)
 	}
 
 	UploadFileParams struct {

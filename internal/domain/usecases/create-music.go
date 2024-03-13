@@ -19,6 +19,6 @@ type (
 		DurationInMs int
 		ReleaseDate  time.Time
 		CoverImage   *os.File
-		Song         *os.File
+		MusicFile    *os.File
 	}
 )

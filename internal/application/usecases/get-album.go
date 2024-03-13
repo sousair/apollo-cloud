@@ -31,7 +31,12 @@ func (uc GetAlbumUsecase) Get(params usecases.GetAlbumParams) (*entities.Album, 
 		includes = append(includes, "Owner")
 	}
 
-	album, err := uc.albumRepository.FindBy(&entities.Album{ID: params.ID}, includes)
+	album, err := uc.albumRepository.FindBy(
+		map[string]interface{}{
+			"id": params.ID,
+		},
+		includes,
+	)
 
 	if err != nil {
 		return nil, err

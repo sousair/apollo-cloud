@@ -31,7 +31,12 @@ func (uc GetMusicUsecase) Get(params usecases.GetMusicParams) (*entities.Music, 
 		includes = append(includes, "Owner")
 	}
 
-	music, err := uc.musicRepository.FindBy(&entities.Music{ID: params.ID}, includes)
+	music, err := uc.musicRepository.FindBy(
+		map[string]interface{}{
+			"id": params.ID,
+		},
+		includes,
+	)
 
 	if err != nil {
 		return nil, err

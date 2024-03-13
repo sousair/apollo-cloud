@@ -22,6 +22,6 @@ type (
 		Name           string
 		DurationInMs   int
 		CoverImageFile *os.File
-		SongFile       *os.File
+		MusicFile      *os.File
 	}
 )

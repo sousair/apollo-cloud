@@ -37,7 +37,12 @@ func main() {
 		panic(err)
 	}
 
-	err = db.AutoMigrate(gormmodels.OwnerModel{}, gormmodels.AlbumModel{}, gormmodels.MusicModel{})
+	err = db.AutoMigrate(
+		gormmodels.FileLocationModel{},
+		gormmodels.OwnerModel{},
+		gormmodels.AlbumModel{},
+		gormmodels.MusicModel{},
+	)
 
 	if err != nil {
 		fmt.Println("Error migrating models")

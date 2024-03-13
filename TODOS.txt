@@ -1,6 +1,3 @@
-- Normalize domain names 
-  - Music or Song
-  - How to "call" files over the codebase
 - Add custom errors in every layer
 - Improve http handlers error handling (a lot because rn is very shitty)
 - Add tests
@@ -8,3 +5,4 @@
   - App usecases
   - Infra (including repositories)
 - Add transactions (specially on release album feature)
+- Calculate music duration instead of receiving it 

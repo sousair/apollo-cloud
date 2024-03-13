@@ -1,9 +1,12 @@
 package s3
 
 import (
+	"path/filepath"
+
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/sousair/apollo-cloud/internal/domain/repositories"
+	"github.com/sousair/apollo-cloud/internal/domain/valueobjects"
 )
 
 type S3FileRepository struct {
@@ -24,7 +27,7 @@ func NewS3FileRepository(awsSession *session.Session, privateBucketName, publicB
 	}
 }
 
-func (r *S3FileRepository) Upload(params repositories.UploadFileParams) (*repositories.Location, error) {
+func (r S3FileRepository) Upload(params repositories.UploadFileParams) (*valueobjects.FileLocation, error) {
 	ACL := "private"
 	BucketName := r.privateBucketName
 
@@ -34,6 +37,7 @@ func (r *S3FileRepository) Upload(params repositories.UploadFileParams) (*reposi
 	}
 
 	filename := params.File.Name()
+	extension := filepath.Ext(filename)
 
 	uploadInput := &s3manager.UploadInput{
 		Bucket: &BucketName,
@@ -48,9 +52,10 @@ func (r *S3FileRepository) Upload(params repositories.UploadFileParams) (*reposi
 		return nil, err
 	}
 
-	location := &repositories.Location{
-		URL:      res.Location,
-		Provider: "s3",
+	location := &valueobjects.FileLocation{
+		URL:       res.Location,
+		Provider:  "s3",
+		Extension: extension,
 	}
 
 	return location, nil

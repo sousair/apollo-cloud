@@ -65,19 +65,19 @@ func (h CreateMusicHttpHandler) Handle(c echo.Context) error {
 
 	defer coverImage.Close()
 
-	songMultipartHeader, err := c.FormFile("audio_file")
+	musicMultipartHeader, err := c.FormFile("music_file")
 
 	if err != nil {
 		return httputils.NewHttpErrorResponse(c, http.StatusBadRequest, "invalid request body")
 	}
 
-	song, err := httputils.MultipartHeaderFileToOsFile(songMultipartHeader)
+	musicFile, err := httputils.MultipartHeaderFileToOsFile(musicMultipartHeader)
 
 	if err != nil {
 		return httputils.NewHttpErrorResponse(c, http.StatusInternalServerError, "internal server error")
 	}
 
-	defer song.Close()
+	defer musicFile.Close()
 
 	durationInMs, err := strconv.Atoi(req.DurationInMs)
 	releaseDate, err := time.Parse("2006-01-02", req.ReleaseDate)
@@ -89,7 +89,7 @@ func (h CreateMusicHttpHandler) Handle(c echo.Context) error {
 		DurationInMs: durationInMs,
 		ReleaseDate:  releaseDate,
 		CoverImage:   coverImage,
-		Song:         song,
+		MusicFile:    musicFile,
 	})
 
 	if err != nil {

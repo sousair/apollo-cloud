@@ -80,7 +80,7 @@ func (h ReleaseAlbumHttpHandler) Handle(c echo.Context) error {
 			defer musicParams.CoverImageFile.Close()
 		}
 
-		defer musicParams.SongFile.Close()
+		defer musicParams.MusicFile.Close()
 	}
 
 	if err != nil {
@@ -92,7 +92,6 @@ func (h ReleaseAlbumHttpHandler) Handle(c echo.Context) error {
 
 func (h ReleaseAlbumHttpHandler) getMusicData(c echo.Context) ([]usecases.ReleaseAlbumMusicParams, error) {
 	var musicsParams []usecases.ReleaseAlbumMusicParams
-
 	seekMusic := true
 	musicCounter := 1
 
@@ -121,13 +120,13 @@ func (h ReleaseAlbumHttpHandler) getMusicData(c echo.Context) ([]usecases.Releas
 			}
 		}
 
-		songMultipartHeader, err := c.FormFile("music_song_" + strconv.Itoa(musicCounter))
+		musicMultipartHeader, err := c.FormFile("music_file_" + strconv.Itoa(musicCounter))
 
 		if err != nil {
 			return nil, err
 		}
 
-		songFile, err := httputils.MultipartHeaderFileToOsFile(songMultipartHeader)
+		musicFile, err := httputils.MultipartHeaderFileToOsFile(musicMultipartHeader)
 
 		if err != nil {
 			return nil, err
@@ -137,7 +136,7 @@ func (h ReleaseAlbumHttpHandler) getMusicData(c echo.Context) ([]usecases.Releas
 			Name:           musicName,
 			DurationInMs:   durationInMs,
 			CoverImageFile: coverImageFile,
-			SongFile:       songFile,
+			MusicFile:      musicFile,
 		})
 
 		musicCounter++

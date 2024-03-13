@@ -45,11 +45,11 @@ func (uc ReleaseAlbumUsecase) Release(params usecases.ReleaseAlbumParams) (*enti
 	releaseTime := time.Now()
 
 	album, err := entities.NewAlbum(entities.NewAlbumParams{
-		ID:            uc.uuidProvider.Generate(),
-		Name:          params.Name,
-		ReleaseDate:   releaseTime,
-		OwnerID:       params.OwnerID,
-		CoverImageURL: coverLocation.URL,
+		ID:                 uc.uuidProvider.Generate(),
+		Name:               params.Name,
+		ReleaseDate:        releaseTime,
+		OwnerID:            params.OwnerID,
+		CoverImageLocation: coverLocation,
 	})
 
 	if err != nil {
@@ -71,7 +71,7 @@ func (uc ReleaseAlbumUsecase) Release(params usecases.ReleaseAlbumParams) (*enti
 			DurationInMs: musicParams.DurationInMs,
 			ReleaseDate:  releaseTime,
 			CoverImage:   musicParams.CoverImageFile,
-			Song:         musicParams.SongFile,
+			MusicFile:    musicParams.MusicFile,
 		})
 
 		if err != nil {
